@@ -1,7 +1,5 @@
-"use client";
+const page = () => {
+  return <></>;
+};
 
-export default function Home() {
-  return (
-    <div className="h-screen w-full flex justify-center items-center flex-col"></div>
-  );
-}
+export default page;

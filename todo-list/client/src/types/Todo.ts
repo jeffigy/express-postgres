@@ -1,4 +1,4 @@
 export type Todo = {
-  todo_id: string;
+  todo_id: number;
   description: string;
 };
