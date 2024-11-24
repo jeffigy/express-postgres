@@ -1,5 +1,7 @@
 CREATE DATABASE todo_app;
 
+CREATE DATABASE todo_app_test;
+
 CREATE TABLE todos(
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
