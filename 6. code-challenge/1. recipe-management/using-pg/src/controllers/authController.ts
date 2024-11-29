@@ -37,12 +37,13 @@ export const signup = async (req: Request, res: Response) => {
     [name, email, hashedPwd]
   );
 
-  const registeredUser = newUser[0];
+  const registeredUser: User = newUser[0];
 
   const accessToken = jwt.sign(
     {
-      userInfo: {
+      UserInfo: {
         email: registeredUser.email,
+        user_id: registeredUser.user_id,
       },
     },
     ACCESS_TOKEN_SECRET,
@@ -51,8 +52,9 @@ export const signup = async (req: Request, res: Response) => {
 
   const refreshToken = jwt.sign(
     {
-      userInfo: {
+      UserInfo: {
         email: registeredUser.email,
+        user_id: registeredUser.user_id,
       },
     },
     REFRESH_TOKEN_SECRET,
@@ -97,8 +99,9 @@ export const login = async (req: Request, res: Response) => {
 
   const accessToken = jwt.sign(
     {
-      userInfo: {
+      UserInfo: {
         email: foundUser.email,
+        user_id: foundUser.user_id,
       },
     },
     ACCESS_TOKEN_SECRET,
@@ -107,8 +110,9 @@ export const login = async (req: Request, res: Response) => {
 
   const refreshToken = jwt.sign(
     {
-      userInfo: {
+      UserInfo: {
         email: foundUser.email,
+        user_id: foundUser.user_id,
       },
     },
     REFRESH_TOKEN_SECRET,

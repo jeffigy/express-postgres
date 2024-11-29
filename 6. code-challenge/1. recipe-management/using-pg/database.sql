@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS "recipes" (
 CREATE TABLE IF NOT EXISTS favorites (
     favorite_id UUid DEFAULT uuid_generate_v4(),
     recipe_id UUID NOT NULL,
-    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
+    user_id UUID NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 INSERT INTO
