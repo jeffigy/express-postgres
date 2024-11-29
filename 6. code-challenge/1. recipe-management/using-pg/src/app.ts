@@ -5,6 +5,7 @@ import authRoute from "./routes/authRoute";
 import recipeRoute from "./routes/recipeRoute";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import favoriteRoute from "./routes/favoriteRoute";
 connectDB();
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRoute);
 app.use("/recipes", recipeRoute);
+app.use("/favorites", favoriteRoute);
 
 // app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
 //   console.error(err.stack);

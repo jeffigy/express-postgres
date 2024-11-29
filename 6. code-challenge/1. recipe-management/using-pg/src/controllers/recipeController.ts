@@ -14,7 +14,9 @@ export const getRecipes = async (req: Request, res: Response) => {
 export const getRecipe = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const recipes = await query("SELECT * FROM recipes WHERE id = $1", [id]);
+  const recipes = await query("SELECT * FROM recipes WHERE recipe_id = $1", [
+    id,
+  ]);
   if (recipes.length === 0) {
     res.status(404).json({ message: "No recipe found" });
   }
@@ -42,7 +44,9 @@ export const updateRecipe = async (req: Request, res: Response) => {
   const { title, description, ingredients, instructions } = req.body;
   const { id } = req.params;
 
-  const recipes = await query("SELECT * FROM recipes WHERE id = $1", [id]);
+  const recipes = await query("SELECT * FROM recipes WHERE recipe_id = $1", [
+    id,
+  ]);
 
   if (recipes.length === 0) {
     res.status(404).json({ message: "No recipe found" });
@@ -54,7 +58,7 @@ export const updateRecipe = async (req: Request, res: Response) => {
   }
 
   const newRecipe = await query(
-    `UPDATE recipes SET title = $1, description = $2, ingredients = $3::jsonb, instructions = $4 WHERE id = $5 RETURNING *`,
+    `UPDATE recipes SET title = $1, description = $2, ingredients = $3::jsonb, instructions = $4 WHERE recipe_id = $5 RETURNING *`,
     [title, description, JSON.stringify(ingredients), instructions, id]
   );
 
@@ -69,7 +73,7 @@ export const deleteRecipe = async (req: Request, res: Response) => {
   }
 
   const existedRecipe = await query(
-    "SELECT EXISTS(SELECT 1 FROM recipes WHERE id = $1)",
+    "SELECT EXISTS(SELECT 1 FROM recipes WHERE recipe_id = $1)",
     [id]
   );
 
@@ -78,7 +82,7 @@ export const deleteRecipe = async (req: Request, res: Response) => {
   }
 
   const deletedRecipe: Recipe[] = await query(
-    "DELETE FROM recipes WHERE id = $1 RETURNING *",
+    "DELETE FROM recipes WHERE recipe_id = $1 RETURNING *",
     [id]
   );
 

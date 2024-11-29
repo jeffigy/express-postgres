@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 );
 
 CREATE TABLE IF NOT EXISTS "recipes" (
-    id UUID DEFAULT uuid_generate_v4(),
+    recipe_id UUID DEFAULT uuid_generate_v4(),
     title VARCHAR(255) NOT NULL,
     description TEXT,
     ingredients JSONB,
@@ -19,6 +19,12 @@ CREATE TABLE IF NOT EXISTS "recipes" (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     -- FOREIGN KEY (user_id) REFERENCES "users"(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS favorites (
+    favorite_id UUid DEFAULT uuid_generate_v4(),
+    recipe_id UUID NOT NULL,
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
 
 INSERT INTO
