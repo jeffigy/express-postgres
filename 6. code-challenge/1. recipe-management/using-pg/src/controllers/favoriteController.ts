@@ -65,7 +65,7 @@ export const deleteFavorite = async (req: Request, res: Response) => {
   }
 
   const foundFavorite = await query(
-    "SELECT * FROM favorites WHERE favorite_id = $1 AND favorites.user_id = $2",
+    "SELECT * FROM favorites WHERE favorites.favorite_id = $1 AND favorites.user_id = $2",
     [id, userId]
   );
 

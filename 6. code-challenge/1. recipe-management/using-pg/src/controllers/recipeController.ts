@@ -3,7 +3,11 @@ import { query } from "../utils/db";
 import { Recipe } from "../types/recipe";
 
 export const getRecipes = async (req: Request, res: Response) => {
-  const recipes = await query("SELECT * FROM recipes");
+  const userId = req.user_id;
+  const recipes = await query(
+    `SELECT * FROM recipes INNER JOIN users ON recipes.user_id = users.user_id WHERE users.user_id = $1`,
+    [userId]
+  );
   if (recipes.length === 0) {
     res.status(404).json({ message: "No recipes found" });
   }
@@ -13,10 +17,11 @@ export const getRecipes = async (req: Request, res: Response) => {
 
 export const getRecipe = async (req: Request, res: Response) => {
   const { id } = req.params;
-
-  const recipes = await query("SELECT * FROM recipes WHERE recipe_id = $1", [
-    id,
-  ]);
+  const userId = req.user_id;
+  const recipes = await query(
+    "SELECT * FROM recipes INNER JOIN users ON recipes.user_id = users.user_id WHERE recipes.recipe_id = $1 AND users.user_id = $2",
+    [id, userId]
+  );
   if (recipes.length === 0) {
     res.status(404).json({ message: "No recipe found" });
   }
@@ -67,15 +72,16 @@ export const updateRecipe = async (req: Request, res: Response) => {
 
 export const deleteRecipe = async (req: Request, res: Response) => {
   const { id } = req.params;
-
+  const userId = req.user_id;
   if (!id) {
     res.status(400).json({ message: "id is required" });
   }
 
   const existedRecipe = await query(
-    "SELECT EXISTS(SELECT 1 FROM recipes WHERE recipe_id = $1)",
-    [id]
+    "SELECT EXISTS(SELECT 1 FROM recipes WHERE recipes.recipe_id = $1 AND recipes.user_id = $2)",
+    [id, userId]
   );
+  console.log({ existedRecipe });
 
   if (!existedRecipe[0].exists) {
     res.status(404).json({ message: "Recipe not found" });

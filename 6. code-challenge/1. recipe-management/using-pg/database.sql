@@ -15,10 +15,10 @@ CREATE TABLE IF NOT EXISTS "recipes" (
     description TEXT,
     ingredients JSONB,
     instructions TEXT,
-    -- user_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    -- FOREIGN KEY (user_id) REFERENCES "users"(id) ON DELETE CASCADE
+    user_id UUID NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS favorites (
