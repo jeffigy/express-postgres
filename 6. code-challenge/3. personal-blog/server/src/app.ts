@@ -5,6 +5,7 @@ import blogRoute from "./routes/blogRoute";
 import authRoute from "./routes/authRoute";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler";
+import userRoute from "./routes/usersRoute";
 
 connectDb();
 const app = express();
@@ -14,6 +15,7 @@ app.use(cookieParser());
 
 app.use("/blogs", blogRoute);
 app.use("/auth", authRoute);
+app.use("/user", userRoute);
 
 app.use(errorHandler);
 
