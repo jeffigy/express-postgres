@@ -7,7 +7,7 @@ export const blogs = pgTable("blogs", {
   title: varchar().notNull(),
   content: varchar().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
-  // userId: varchar("user_id")
-  //   .notNull()
-  //   .references(() => users.userId),
+  userId: varchar("user_id")
+    .notNull()
+    .references(() => users.userId),
 });
