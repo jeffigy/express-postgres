@@ -139,3 +139,22 @@ export const login = async (req: Request, res: Response) => {
 
   res.json({ accessToken });
 };
+
+//* Logout
+
+export const logout = (req: Request, res: Response) => {
+  const cookies = req.cookies;
+
+  if (!cookies?.jwt) {
+    res.status(204);
+    return;
+  }
+
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+
+  res.json({ message: "Cookie cleared" });
+};
