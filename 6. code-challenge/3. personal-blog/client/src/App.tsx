@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
 import HomePage from "@/pages/home";
-import LoginPage from "@/pages/auth/login";
-import SignupPage from "@/pages/auth/signup";
+import LoginPage from "@/pages/login";
+import SignUpPage from "@/pages/signup";
 import Layout from "@/components/Layout";
 
 const App = () => {
@@ -10,7 +10,7 @@ const App = () => {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="signup" element={<SignupPage />} />
+        <Route path="signup" element={<SignUpPage />} />
       </Route>
     </Routes>
   );
