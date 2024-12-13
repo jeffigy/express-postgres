@@ -41,6 +41,7 @@ const LoginForm = () => {
 
           <Input
             placeholder="Email"
+            type="email"
             value={email}
             onChange={({ target }) => setEmail(target.value)}
           />
@@ -52,7 +53,7 @@ const LoginForm = () => {
           />
         </CardContent>
         <CardFooter>
-          <Button className="w-full" disabled={!email && !password}>
+          <Button className="w-full" disabled={!email || !password}>
             {isPending ? (
               <>
                 <Loader className="animate-spin" />
