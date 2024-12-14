@@ -1,30 +1,27 @@
-import { UserType } from "@/types/user";
 import { StateCreator } from "zustand";
 
 type AuthState = {
   token: string | null;
-  user: UserType | null;
+  isAuthenicated: boolean;
 };
 type ActionType = {
   setCredentials: (token: string) => void;
   clearCredentials: () => void;
-  setUser: (user: UserType) => void;
 };
 
 const initialState: AuthState = {
   token: null,
-  user: null,
+  isAuthenicated: false,
 };
 
 export type AuthSlice = AuthState & ActionType;
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
   ...initialState,
-  setCredentials: (token) => set({ token }),
+  setCredentials: (token) => set({ token, isAuthenicated: true }),
   clearCredentials: () =>
     set({
       token: null,
-      user: null,
+      isAuthenicated: false,
     }),
-  setUser: (user) => ({ user }),
 });

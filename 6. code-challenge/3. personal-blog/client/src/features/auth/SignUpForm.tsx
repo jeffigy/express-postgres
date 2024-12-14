@@ -8,21 +8,34 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useSignUpMutation } from "./authMutation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Loader } from "lucide-react";
 import { AxiosApiResponse } from "@/types/ServerResponse";
+import usePersist from "@/hooks/usePersist";
 
 const SignUpForm = () => {
-  const { mutate: signUp, isError, error, isPending } = useSignUpMutation();
+  const {
+    mutate: signUp,
+    isSuccess,
+    isError,
+    error,
+    isPending,
+  } = useSignUpMutation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [_persist, setPersist] = usePersist();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     signUp({ email, password, name });
   };
+  useEffect(() => {
+    if (isSuccess) {
+      setPersist(true);
+    }
+  }, [isSuccess]);
   return (
     <form onSubmit={handleSubmit}>
       <Card className="mx-auto max-w-sm">
