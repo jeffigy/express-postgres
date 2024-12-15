@@ -5,6 +5,7 @@ import SignUpPage from "@/pages/signup";
 import Layout from "@/components/Layout";
 import RequireAuth from "@/features/auth/RequireAuth";
 import PersistLogin from "@/features/auth/PersistLogin";
+import BlogDetailsPage from "./pages/home/blog-details";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
             </Route>
           </Route>
         </Route>
+        <Route path=":id" element={<BlogDetailsPage />} />
       </Route>
     </Routes>
   );

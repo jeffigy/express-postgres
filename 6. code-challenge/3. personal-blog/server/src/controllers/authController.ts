@@ -4,8 +4,18 @@ import { users } from "../db/schema/users";
 import { isCuid } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { compare, hash } from "bcrypt";
-import { sign } from "jsonwebtoken";
+import {
+  JsonWebTokenError,
+  NotBeforeError,
+  sign,
+  TokenExpiredError,
+  verify,
+} from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../utils/config";
+
+interface DecodedToken {
+  email: string;
+}
 
 //* Get all users
 export const getUsers = async (req: Request, res: Response) => {
@@ -157,4 +167,65 @@ export const logout = (req: Request, res: Response) => {
   });
 
   res.json({ message: "Cookie cleared" });
+};
+
+//* Refresh
+
+export const refresh = (req: Request, res: Response) => {
+  const cookies = req.cookies;
+  if (!cookies?.jwt) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  const refreshToken = cookies.jwt;
+
+  verify(
+    refreshToken,
+    REFRESH_TOKEN_SECRET,
+    async (error: any, decoded: any) => {
+      if (error) {
+        if (
+          error instanceof TokenExpiredError ||
+          error instanceof JsonWebTokenError ||
+          error instanceof NotBeforeError
+        ) {
+          res.status(403).json({ message: "Forbidden" });
+          return;
+        }
+      }
+
+      if (!decoded) {
+        res.status(403).json({ message: "Forbidden" });
+        return;
+      }
+
+      const decodedToken = decoded as DecodedToken;
+
+      const foundUser = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, decodedToken.email));
+
+      if (foundUser.length === 0) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+
+      const user = foundUser[0];
+
+      const accessToken = sign(
+        {
+          UserInfo: {
+            email: user.email,
+            name: user.name,
+            userId: user.userId,
+          },
+        },
+        ACCESS_TOKEN_SECRET,
+        { expiresIn: "1hr" }
+      );
+      res.json({ accessToken });
+    }
+  );
 };

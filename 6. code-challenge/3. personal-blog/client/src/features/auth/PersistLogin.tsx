@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRefreshMutation } from "./authMutation";
 import { Outlet, useNavigate } from "react-router";
 import { Loader } from "lucide-react";
+import Loading from "@/components/Loading";
 
 const PersistLogin = () => {
   const navigate = useNavigate();
@@ -47,11 +48,7 @@ const PersistLogin = () => {
   }
 
   if (isPending) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <Loader className="animate-spin" />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (isError) {

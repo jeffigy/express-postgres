@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import db from "../db";
-import { blogs } from "../db/schema";
+import { blogs } from "../db/schema/blogs";
 import { or, eq, ilike } from "drizzle-orm";
 
 export const fetchBlogs = async (req: Request, res: Response) => {
