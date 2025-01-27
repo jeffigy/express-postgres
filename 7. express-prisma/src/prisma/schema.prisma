@@ -8,8 +8,22 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid(2))
+  userId    String   @id @default(cuid(2)) @map("user_id")
   email     String   @unique
   password  String
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Blog {
+  postId    Int      @id @default(autoincrement()) @map("post_id")
+  title     String
+  content   String
+  category  String
+  tags      String[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt() @map("updated_at")
+
+  @@map("posts")
 }
