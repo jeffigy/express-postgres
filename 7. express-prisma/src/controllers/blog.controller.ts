@@ -2,46 +2,62 @@ import { Request, Response } from "express";
 import prisma from "../prisma/client";
 
 export const getBlogs = async (req: Request, res: Response) => {
-  res.send("this returns all blogs ");
+  const blogs = await prisma.blog.findMany();
+
+  if (blogs.length === 0) {
+    res.status(404).json({ message: "No blogs found" });
+    return;
+  }
+
+  res.json(blogs);
 };
 
-// export const newBlog = async (req: Request, res: Response) => {
-//   const { email, password } = req.body;
+export const newBlog = async (req: Request, res: Response) => {
+  const { title, content, category } = req.body;
+  const userId = req.userId;
+  console.log(userId);
 
-//   if (!email || !password) {
-//     res.status(400).json({ message: "Email and password are required" });
-//     return;
-//   }
+  if (!title || !content || !category) {
+    res.status(400).json({ message: "All fields are required" });
+    return;
+  }
 
-//   const hashedPwd = await hash(password, 10);
+  const newBlog = await prisma.blog.create({
+    data: {
+      title,
+      content,
+      category,
+      userId,
+    },
+  });
 
-//   const blog = await prisma.blog.create({
-//     data: {
-//       email,
-//       password: hashedPwd,
-//     },
-//   });
+  res.status(201).json(newBlog);
+};
 
-//   res.status(201).json(blog);
-// };
+export const getBlog = async (req: Request, res: Response) => {
+  const { id } = req.params;
 
-// export const getBlog = async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const blog = await prisma.blog.findUnique({ where: { blogId: id } });
+  const blog = await prisma.blog.findUnique({ where: { blogId: +id } });
 
-//   if (!blog) {
-//     res.status(404).json({ message: "Blog not found" });
-//     return;
-//   }
+  if (!blog) {
+    res.status(404).json({ message: "Blog not found" });
+    return;
+  }
 
-//   res.json(blog);
-// };
+  res.json(blog);
+};
 
 // export const updateBlog = async (req: Request, res: Response) => {
 //   const { id } = req.params;
-//   const { email, password } = req.body;
+//   const { title, content, category, tags } = req.body;
+//   const userId = req.userId;
 
-//   const foundBlog = await prisma.blog.findUnique({ where: { blogId: id } });
+//   if (!title || !content || !category || !tags || !Array.isArray(tags)) {
+//     res.status(400).json({ message: "All fields are required" });
+//     return;
+//   }
+
+//   const foundBlog = await prisma.blog.findUnique({ where: { blogId: +id } });
 
 //   if (!foundBlog) {
 //     res.status(404).json({ message: "Blog not found" });
@@ -49,7 +65,19 @@ export const getBlogs = async (req: Request, res: Response) => {
 //   }
 // };
 
-// export const deleteBlog = async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   res.send(`this deletes a blog with an id #${id}`);
-// };
+export const deleteBlog = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const blog = await prisma.blog.findUnique({ where: { blogId: +id } });
+
+  if (!blog) {
+    res.status(404).json({ message: "Blog not found" });
+    return;
+  }
+
+  await prisma.blog.delete({
+    where: { blogId: +id },
+  });
+
+  res.status(204).send();
+};

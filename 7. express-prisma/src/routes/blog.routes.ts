@@ -1,16 +1,16 @@
 import { Router } from "express";
 import {
-  // deleteBlog,
-  // getBlog,
+  deleteBlog,
+  getBlog,
   getBlogs,
-  // newBlog,
+  newBlog,
   // updateBlog,
 } from "../controllers/blog.controller";
 
 const blogRoute = Router();
 
-blogRoute.route("/").get(getBlogs);
-// .post(newBlog);
-// blogRoute.route("/:id").get(getBlog).patch(updateBlog).delete(deleteBlog);
+blogRoute.route("/").get(getBlogs).post(newBlog);
+blogRoute.route("/:id").get(getBlog).delete(deleteBlog);
+// .patch(updateBlog).
 
 export default blogRoute;

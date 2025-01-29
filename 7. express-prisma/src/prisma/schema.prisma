@@ -18,34 +18,23 @@ model User {
 }
 
 model Blog {
-  blogId    Int       @id @default(autoincrement()) @map("blog_id")
+  blogId    Int      @id @default(autoincrement()) @map("blog_id")
   title     String
   content   String
   category  String
-  tags      String[]
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt() @map("updated_at")
+  // tags      Tag[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt() @map("updated_at")
   userId    String
-  User      User      @relation(fields: [userId], references: [userId])
-  BlogTag   BlogTag[]
+  user      User     @relation(fields: [userId], references: [userId])
 
   @@map("blogs")
 }
 
-model Tag {
-  tagId   Int       @id @default(autoincrement())
-  name    String    @unique
-  BlogTag BlogTag[]
+// model Tag {
+//   tagId Int    @id @default(autoincrement())
+//   name  String @unique
+//   blogs Blog[]
 
-  @@map("tag")
-}
-
-model BlogTag {
-  blogId Int
-  blog   Blog @relation(fields: [blogId], references: [blogId])
-  tagId  Int
-  tag    Tag  @relation(fields: [tagId], references: [tagId])
-
-  @@id([blogId, tagId])
-  @@map("blog_tag")
-}
+//   @@map("tag")
+// }
