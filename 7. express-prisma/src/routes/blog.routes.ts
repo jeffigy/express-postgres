@@ -4,13 +4,12 @@ import {
   getBlog,
   getBlogs,
   newBlog,
-  // updateBlog,
+  updateBlog,
 } from "../controllers/blog.controller";
 
 const blogRoute = Router();
 
 blogRoute.route("/").get(getBlogs).post(newBlog);
-blogRoute.route("/:id").get(getBlog).delete(deleteBlog);
-// .patch(updateBlog).
+blogRoute.route("/:id").get(getBlog).patch(updateBlog).delete(deleteBlog);
 
 export default blogRoute;

@@ -47,23 +47,39 @@ export const getBlog = async (req: Request, res: Response) => {
   res.json(blog);
 };
 
-// export const updateBlog = async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const { title, content, category, tags } = req.body;
-//   const userId = req.userId;
+export const updateBlog = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { title, content, category } = req.body;
+  const userId = req.userId;
 
-//   if (!title || !content || !category || !tags || !Array.isArray(tags)) {
-//     res.status(400).json({ message: "All fields are required" });
-//     return;
-//   }
+  if (!title || !content || !category) {
+    res.status(400).json({ message: "All fields are required" });
+    return;
+  }
 
-//   const foundBlog = await prisma.blog.findUnique({ where: { blogId: +id } });
+  const foundBlog = await prisma.blog.findUnique({
+    where: { blogId: +id, userId },
+  });
 
-//   if (!foundBlog) {
-//     res.status(404).json({ message: "Blog not found" });
-//     return;
-//   }
-// };
+  if (!foundBlog) {
+    res.status(404).json({ message: "Blog not found" });
+    return;
+  }
+
+  await prisma.blog.update({
+    where: {
+      blogId: +id,
+      userId,
+    },
+    data: {
+      title,
+      content,
+      category,
+    },
+  });
+
+  res.json({ message: "Blog updated successfully" });
+};
 
 export const deleteBlog = async (req: Request, res: Response) => {
   const { id } = req.params;
